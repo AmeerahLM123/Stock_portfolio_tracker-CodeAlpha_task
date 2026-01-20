@@ -1,0 +1,64 @@
+import csv
+
+# Hardcoded stock prices (meaningful company names)
+stock_prices = {
+    "TATA_MOTORS": 750,
+    "RELIANCE": 2450,
+    "INFOSYS": 1450,
+    "HDFC_BANK": 1650,
+    "ICICI_BANK": 950
+}
+
+portfolio = []
+total_investment = 0
+
+print("Stock Portfolio Tracker")
+print("Available Stocks:", ", ".join(stock_prices.keys()))
+
+# User input for number of stocks
+n = int(input("Enter number of stocks: "))
+
+for i in range(n):
+    stock_name = input("Enter stock name: ").upper()
+    quantity = int(input("Enter quantity: "))
+
+    if stock_name in stock_prices:
+        price = stock_prices[stock_name]
+        value = price * quantity
+        total_investment += value
+        portfolio.append([stock_name, quantity, price, value])
+    else:
+        print("Stock not available. Entry skipped.")
+
+print("\n--- Portfolio Summary ---")
+for stock in portfolio:
+    print(f"Stock: {stock[0]} | Quantity: {stock[1]} | Price: {stock[2]} | Value: {stock[3]}")
+
+print("Total Investment Value:", total_investment)
+
+# Optional file saving
+save = input("\nDo you want to save the result? (yes/no): ").lower()
+
+if save == "yes":
+    file_type = input("Enter file type (txt/csv): ").lower()
+
+    if file_type == "txt":
+        with open("portfolio.txt", "w") as file:
+            file.write("Stock Portfolio Summary\n")
+            file.write("-----------------------\n")
+            for stock in portfolio:
+                file.write(f"{stock[0]} {stock[1]} {stock[2]} {stock[3]}\n")
+            file.write(f"\nTotal Investment Value: {total_investment}")
+        print("Portfolio saved to portfolio.txt")
+
+    elif file_type == "csv":
+        with open("portfolio.csv", "w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(["Stock Name", "Quantity", "Price", "Total Value"])
+            for stock in portfolio:
+                writer.writerow(stock)
+            writer.writerow(["Total Investment", "", "", total_investment])
+        print("Portfolio saved to portfolio.csv")
+
+    else:
+        print("Invalid file type. File not saved.")
